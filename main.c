@@ -49,12 +49,16 @@
 #include "nrf.h"
 #include "nordic_common.h"
 #include "boards.h"
+#include "nrf_log_ctrl.h"
+#include "nrf_log_default_backends.h"
 
 /**
  * @brief Function for application main entry.
  */
 int main(void)
 {
+    uint32_t err_code;
+    err_code = NRF_LOG_INIT(NULL);
     while (true)
     {
         // Do nothing.
