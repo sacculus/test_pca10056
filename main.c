@@ -49,9 +49,11 @@
 #include "nrf.h"
 #include "nordic_common.h"
 #include "boards.h"
+
 #include "nrf_log.h"
 #include "nrf_log_ctrl.h"
 #include "nrf_log_default_backends.h"
+
 #include "app_scheduler.h"
 
 /**
@@ -62,6 +64,10 @@ int main(void)
     char string_on_stack[] = "stack";
     uint32_t err_code;
     err_code = NRF_LOG_INIT(NULL);
+    APP_ERROR_CHECK(err_code);
+
+    NRF_LOG_DEFAULT_BACKENDS_INIT();
+
     NRF_LOG_INFO("%s", NRF_LOG_PUSH(string_on_stack));
     NRF_LOG_FLUSH();
     while (true)
