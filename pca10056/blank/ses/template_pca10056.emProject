@@ -337,5 +337,4 @@
     Name="Debug"
     c_preprocessor_definitions="DEBUG; DEBUG_NRF"
     gcc_optimization_level="None" />
-  <import file_name="../../../../saadc/pca10056/blank/ses/saadc_pca10056.emProject" />
 </solution>

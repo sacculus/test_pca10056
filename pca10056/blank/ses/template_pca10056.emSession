@@ -24,20 +24,9 @@
   <ProjectSessionItem path="test_pca10056"/>
   <ProjectSessionItem path="test_pca10056;test_pca10056"/>
   <ProjectSessionItem path="test_pca10056;test_pca10056;Application"/>
-  <ProjectSessionItem path="test_pca10056;test_pca10056;Board Definition"/>
-  <ProjectSessionItem path="test_pca10056;test_pca10056;Board Support"/>
-  <ProjectSessionItem path="test_pca10056;test_pca10056;None"/>
-  <ProjectSessionItem path="test_pca10056;test_pca10056;nRF_External"/>
-  <ProjectSessionItem path="test_pca10056;test_pca10056;nRF_Log"/>
-  <ProjectSessionItem path="test_pca10056;test_pca10056;nRF_Segger_RTT"/>
+  <ProjectSessionItem path="test_pca10056;test_pca10056;nRF_Drivers"/>
+  <ProjectSessionItem path="test_pca10056;test_pca10056;nRF_Libraries"/>
   <ProjectSessionItem path="test_pca10056;test_pca10056;Segger Startup Files"/>
-  <ProjectSessionItem path="test_pca10056;saadc_pca10056"/>
-  <ProjectSessionItem path="test_pca10056;saadc_pca10056;saadc_pca10056"/>
-  <ProjectSessionItem path="test_pca10056;saadc_pca10056;saadc_pca10056;Application"/>
-  <ProjectSessionItem path="test_pca10056;saadc_pca10056;saadc_pca10056;None"/>
-  <ProjectSessionItem path="test_pca10056;saadc_pca10056;saadc_pca10056;nRF_Log"/>
-  <ProjectSessionItem path="test_pca10056;saadc_pca10056;saadc_pca10056;nRF_Segger_RTT"/>
-  <ProjectSessionItem path="test_pca10056;saadc_pca10056;saadc_pca10056;Segger Startup Files"/>
   <SourceCodeControlLogin password="6948A1D334533FE1A93922EB643E4B2C" user="michael.kolomiets@gmail.com"/>
  </Project>
  <Register1>
@@ -71,13 +60,8 @@
   <Watches active="0" update="Never"/>
  </Watch4>
  <Files>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="52" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../main.c" selected="1" top="39" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="286" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../../../../components/libraries/log/nrf_log.h" selected="0" top="277" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="297" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../../../../components/libraries/log/src/nrf_log_internal.h" selected="0" top="288" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="22" y="1345" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../../saadc/pca10056/blank/config/sdk_config.h" selected="0" top="1327" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="67" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../../saadc/main.c" selected="0" top="63" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="46" y="7114" useTextEdit="1" useBinaryEdit="0" left="0" path="../config/sdk_config.h" selected="0" top="7107" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="66" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../../../../components/libraries/log/nrf_log_default_backends.h" selected="0" top="49" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="21" y="88" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../main.c" selected="0" top="62" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="28" y="5552" useTextEdit="1" useBinaryEdit="0" left="0" path="../config/sdk_config.h" selected="1" top="5530" codecName="Default"/>
  </Files>
  <ARMCrossStudioWindow activeProject="test_pca10056" fileDialogDefaultFilter="*.c" autoConnectTarget="J-Link" buildConfiguration="Debug" sessionSettings="" debugSearchFileMap="" fileDialogInitialDirectory="/home/mike/Projects/nRF/nRF5_SDK_16.0.0_98a08e2/external/segger_rtt" debugSearchPath="" autoConnectCapabilities="3711"/>
 </session>

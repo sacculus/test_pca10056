@@ -54,28 +54,79 @@
 #include "nrf_log_ctrl.h"
 #include "nrf_log_default_backends.h"
 
+#include "app_button.h"
+
 #include "app_scheduler.h"
+
+/**
+ *  Delay from a GPIOTE event until a button is reported as pushed (in number of timer ticks).
+ */
+#define BUTTON_DETECTION_DELAY APP_TIMER_TICKS(50)
+
+
+/**@brief Function for handling events from the button handler module.
+ *
+ * @param[in] pin_no        The pin that the event applies to.
+ * @param[in] button_action The button action (press/release).
+ */
+static void button_event_handler(uint8_t pin_no, uint8_t button_action)
+{
+    NRF_LOG_INFO("Button event: pin %d, action %d", pin_no, button_action);
+}
+
+/**@brief Function for initializing the button handler module.
+ */
+static void buttons_init(void)
+{
+    ret_code_t err_code;
+
+    //The array must be static because a pointer to it will be saved in the button handler module.
+    static app_button_cfg_t buttons[] =
+    {
+        {BSP_BUTTON_0, false, BUTTON_PULL, button_event_handler},
+        {BSP_BUTTON_1, false, BUTTON_PULL, button_event_handler},
+        {BSP_BUTTON_2, false, BUTTON_PULL, button_event_handler},
+        {BSP_BUTTON_3, false, BUTTON_PULL, button_event_handler}
+    };
+
+    err_code = app_button_init(buttons, ARRAY_SIZE(buttons),
+                               BUTTON_DETECTION_DELAY);
+    APP_ERROR_CHECK(err_code);
+}
 
 /**
  * @brief Function for application main entry.
  */
 int main(void)
 {
-    char string_on_stack[] = "stack";
     uint32_t err_code;
     err_code = NRF_LOG_INIT(NULL);
     APP_ERROR_CHECK(err_code);
-
     NRF_LOG_DEFAULT_BACKENDS_INIT();
 
-    NRF_LOG_INFO("%s", NRF_LOG_PUSH(string_on_stack));
+    uint32_t info = NRF_FICR->INFO.VARIANT;
+    uint8_t *p = (uint8_t *)&info;
+    
+    NRF_LOG_INFO("Nordic Semiconductor nRF%x, Variant: %c%c%c%c",
+        NRF_FICR->INFO.PART, p[3], p[2], p[1], p[0]);
+    NRF_LOG_INFO("RAM: %dKB, Flash: %dKB",
+        NRF_FICR->INFO.RAM,
+        NRF_FICR->INFO.FLASH);
+    NRF_LOG_INFO("Device ID: %x%x",
+        NRF_FICR->DEVICEID[0],
+        NRF_FICR->DEVICEID[1]);
+    
+    buttons_init();
+
+    NRF_LOG_INFO("System initialized");
+
     NRF_LOG_FLUSH();
     while (true)
     {
         app_sched_execute();
         if (!NRF_LOG_PROCESS())
         { 
-            //sleep
+            // sleep
         }
         // Do nothing.
     }
