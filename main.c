@@ -43,6 +43,9 @@
 *
 */
 
+#define BSP_SIMPLE 1
+
+
 #include <stdbool.h>
 #include <stdint.h>
 
@@ -54,14 +57,27 @@
 #include "nrf_log_ctrl.h"
 #include "nrf_log_default_backends.h"
 
+#include "app_timer.h"
 #include "app_button.h"
-
 #include "app_scheduler.h"
+
+#define TEST_BUTTON_0 NRF_GPIO_PIN_MAP(0,7)
+#define TEST_BUTTON_1 NRF_GPIO_PIN_MAP(0,8)
+#define TEST_BUTTON_2 NRF_GPIO_PIN_MAP(1,10)
 
 /**
  *  Delay from a GPIOTE event until a button is reported as pushed (in number of timer ticks).
  */
 #define BUTTON_DETECTION_DELAY APP_TIMER_TICKS(50)
+
+/**
+ *< Maximum size of scheduler events.
+ */
+#define SCHED_MAX_EVENT_DATA_SIZE 16
+/**
+ *< Maximum number of events in the scheduler queue.
+ */
+#define SCHED_QUEUE_SIZE          192
 
 
 /**@brief Function for handling events from the button handler module.
@@ -80,17 +96,25 @@ static void buttons_init(void)
 {
     ret_code_t err_code;
 
-    //The array must be static because a pointer to it will be saved in the button handler module.
+    /**
+     * The array must be static because a pointer to it
+     * will be saved in the button handler module.
+     */
     static app_button_cfg_t buttons[] =
     {
-        {BSP_BUTTON_0, false, BUTTON_PULL, button_event_handler},
-        {BSP_BUTTON_1, false, BUTTON_PULL, button_event_handler},
-        {BSP_BUTTON_2, false, BUTTON_PULL, button_event_handler},
-        {BSP_BUTTON_3, false, BUTTON_PULL, button_event_handler}
+        {TEST_BUTTON_0, APP_BUTTON_ACTIVE_LOW,
+                NRF_GPIO_PIN_PULLUP, button_event_handler},
+        {TEST_BUTTON_1, APP_BUTTON_ACTIVE_LOW,
+                NRF_GPIO_PIN_PULLUP, button_event_handler},
+        {TEST_BUTTON_2, APP_BUTTON_ACTIVE_LOW,
+                NRF_GPIO_PIN_PULLUP, button_event_handler}
     };
 
     err_code = app_button_init(buttons, ARRAY_SIZE(buttons),
                                BUTTON_DETECTION_DELAY);
+    APP_ERROR_CHECK(err_code);
+
+    err_code = app_button_enable();
     APP_ERROR_CHECK(err_code);
 }
 
@@ -100,9 +124,14 @@ static void buttons_init(void)
 int main(void)
 {
     uint32_t err_code;
+
     err_code = NRF_LOG_INIT(NULL);
     APP_ERROR_CHECK(err_code);
     NRF_LOG_DEFAULT_BACKENDS_INIT();
+
+    APP_SCHED_INIT(SCHED_MAX_EVENT_DATA_SIZE, SCHED_QUEUE_SIZE);
+
+    buttons_init();
 
     uint32_t info = NRF_FICR->INFO.VARIANT;
     uint8_t *p = (uint8_t *)&info;
@@ -116,19 +145,15 @@ int main(void)
         NRF_FICR->DEVICEID[0],
         NRF_FICR->DEVICEID[1]);
     
-    buttons_init();
-
     NRF_LOG_INFO("System initialized");
 
-    NRF_LOG_FLUSH();
     while (true)
     {
-        app_sched_execute();
         if (!NRF_LOG_PROCESS())
         { 
-            // sleep
+            NRF_LOG_FLUSH();
         }
-        // Do nothing.
+        app_sched_execute();
     }
 }
 /** @} */

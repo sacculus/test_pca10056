@@ -2,6 +2,7 @@
 <session>
  <Bookmarks/>
  <Breakpoints groups="Breakpoints" active_group="Breakpoints">
+  <BreakpointListItem trigger="" line="90" counter="0" hardwareBreakpoint="" isFunctionBreakpoint="false" action="" expression="" group="Breakpoints" type="Breakpoint" state="2" filename="../../../main.c" useHWbreakpoint="false"/>
   <Exceptions set="MemManage;UsageFault_Coprocessor;UsageFault_CheckingError;UsageFault_StateError;BusFault;ExceptionEntryReturnFault;HardFault"/>
  </Breakpoints>
  <ExecutionProfileWindow/>
@@ -24,8 +25,11 @@
   <ProjectSessionItem path="test_pca10056"/>
   <ProjectSessionItem path="test_pca10056;test_pca10056"/>
   <ProjectSessionItem path="test_pca10056;test_pca10056;Application"/>
+  <ProjectSessionItem path="test_pca10056;test_pca10056;Board Support"/>
+  <ProjectSessionItem path="test_pca10056;test_pca10056;None"/>
   <ProjectSessionItem path="test_pca10056;test_pca10056;nRF_Drivers"/>
   <ProjectSessionItem path="test_pca10056;test_pca10056;nRF_Libraries"/>
+  <ProjectSessionItem path="test_pca10056;test_pca10056;nRF_Log"/>
   <ProjectSessionItem path="test_pca10056;test_pca10056;Segger Startup Files"/>
   <SourceCodeControlLogin password="6948A1D334533FE1A93922EB643E4B2C" user="michael.kolomiets@gmail.com"/>
  </Project>
@@ -60,8 +64,9 @@
   <Watches active="0" update="Never"/>
  </Watch4>
  <Files>
-  <SessionOpenFile windowGroup="DockEditLeft" x="21" y="88" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../main.c" selected="0" top="62" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="28" y="5552" useTextEdit="1" useBinaryEdit="0" left="0" path="../config/sdk_config.h" selected="1" top="5530" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="32" y="105" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../main.c" selected="1" top="94" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="1532" useTextEdit="1" useBinaryEdit="0" left="0" path="../config/sdk_config.h" selected="0" top="1500" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="95" y="87" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../../../../components/libraries/button/app_button.h" selected="0" top="80" codecName="Default"/>
  </Files>
  <ARMCrossStudioWindow activeProject="test_pca10056" fileDialogDefaultFilter="*.c" autoConnectTarget="J-Link" buildConfiguration="Debug" sessionSettings="" debugSearchFileMap="" fileDialogInitialDirectory="/home/mike/Projects/nRF/nRF5_SDK_16.0.0_98a08e2/external/segger_rtt" debugSearchPath="" autoConnectCapabilities="3711"/>
 </session>
