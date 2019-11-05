@@ -57,28 +57,20 @@
 #include "nrf_log_ctrl.h"
 #include "nrf_log_default_backends.h"
 
+#include "app_gpiote.h"
 #include "app_timer.h"
 #include "app_button.h"
-#include "app_scheduler.h"
 
 #define TEST_BUTTON_0 NRF_GPIO_PIN_MAP(0,7)
 #define TEST_BUTTON_1 NRF_GPIO_PIN_MAP(0,8)
 #define TEST_BUTTON_2 NRF_GPIO_PIN_MAP(1,10)
 
+#define APP_GPIOTE_MAX_USERS 3
+
 /**
  *  Delay from a GPIOTE event until a button is reported as pushed (in number of timer ticks).
  */
-#define BUTTON_DETECTION_DELAY APP_TIMER_TICKS(50)
-
-/**
- *< Maximum size of scheduler events.
- */
-#define SCHED_MAX_EVENT_DATA_SIZE 16
-/**
- *< Maximum number of events in the scheduler queue.
- */
-#define SCHED_QUEUE_SIZE          192
-
+#define BUTTON_DEBOUNCE_DELAY APP_TIMER_TICKS(100)
 
 /**@brief Function for handling events from the button handler module.
  *
@@ -96,26 +88,6 @@ static void buttons_init(void)
 {
     ret_code_t err_code;
 
-    /**
-     * The array must be static because a pointer to it
-     * will be saved in the button handler module.
-     */
-    static app_button_cfg_t buttons[] =
-    {
-        {TEST_BUTTON_0, APP_BUTTON_ACTIVE_LOW,
-                NRF_GPIO_PIN_PULLUP, button_event_handler},
-        {TEST_BUTTON_1, APP_BUTTON_ACTIVE_LOW,
-                NRF_GPIO_PIN_PULLUP, button_event_handler},
-        {TEST_BUTTON_2, APP_BUTTON_ACTIVE_LOW,
-                NRF_GPIO_PIN_PULLUP, button_event_handler}
-    };
-
-    err_code = app_button_init(buttons, ARRAY_SIZE(buttons),
-                               BUTTON_DETECTION_DELAY);
-    APP_ERROR_CHECK(err_code);
-
-    err_code = app_button_enable();
-    APP_ERROR_CHECK(err_code);
 }
 
 /**
@@ -127,11 +99,39 @@ int main(void)
 
     err_code = NRF_LOG_INIT(NULL);
     APP_ERROR_CHECK(err_code);
+
     NRF_LOG_DEFAULT_BACKENDS_INIT();
 
-    APP_SCHED_INIT(SCHED_MAX_EVENT_DATA_SIZE, SCHED_QUEUE_SIZE);
+    //APP_SCHED_INIT(SCHED_MAX_EVENT_DATA_SIZE, SCHED_QUEUE_SIZE);
+    APP_GPIOTE_INIT(APP_GPIOTE_MAX_USERS);
 
-    buttons_init();
+    err_code = app_timer_init();
+    APP_ERROR_CHECK(err_code);
+
+    /**
+     * The array must be static because a pointer to it
+     * will be saved in the button handler module.
+     */
+    static app_button_cfg_t buttons[] =
+    {
+        {TEST_BUTTON_2, APP_BUTTON_ACTIVE_LOW,
+                NRF_GPIO_PIN_PULLUP, button_event_handler},
+        {TEST_BUTTON_1, APP_BUTTON_ACTIVE_LOW,
+                NRF_GPIO_PIN_PULLUP, button_event_handler},
+        {TEST_BUTTON_2, APP_BUTTON_ACTIVE_LOW,
+                NRF_GPIO_PIN_PULLUP, button_event_handler}
+    };
+
+    err_code = app_button_init(buttons, ARRAY_SIZE(buttons),
+                               BUTTON_DEBOUNCE_DELAY);
+    APP_ERROR_CHECK(err_code);
+
+    err_code = app_button_enable();
+    APP_ERROR_CHECK(err_code);
+
+    /**
+     * Initalization complete
+     */
 
     uint32_t info = NRF_FICR->INFO.VARIANT;
     uint8_t *p = (uint8_t *)&info;
@@ -153,7 +153,7 @@ int main(void)
         { 
             NRF_LOG_FLUSH();
         }
-        app_sched_execute();
+        //app_sched_execute();
     }
 }
 /** @} */
