@@ -1228,7 +1228,7 @@
 // <e> NRFX_CLOCK_ENABLED - nrfx_clock - CLOCK peripheral driver
 //==========================================================
 #ifndef NRFX_CLOCK_ENABLED
-#define NRFX_CLOCK_ENABLED 0
+#define NRFX_CLOCK_ENABLED 1
 #endif
 // <o> NRFX_CLOCK_CONFIG_LF_SRC  - LF Clock Source
  
@@ -1260,7 +1260,7 @@
 // <e> NRFX_CLOCK_CONFIG_LOG_ENABLED - Enables logging in the module.
 //==========================================================
 #ifndef NRFX_CLOCK_CONFIG_LOG_ENABLED
-#define NRFX_CLOCK_CONFIG_LOG_ENABLED 0
+#define NRFX_CLOCK_CONFIG_LOG_ENABLED 1
 #endif
 // <o> NRFX_CLOCK_CONFIG_LOG_LEVEL  - Default Severity level
  
@@ -1271,7 +1271,7 @@
 // <4=> Debug 
 
 #ifndef NRFX_CLOCK_CONFIG_LOG_LEVEL
-#define NRFX_CLOCK_CONFIG_LOG_LEVEL 3
+#define NRFX_CLOCK_CONFIG_LOG_LEVEL 4
 #endif
 
 // <o> NRFX_CLOCK_CONFIG_INFO_COLOR  - ANSI escape code prefix.
@@ -2797,7 +2797,7 @@
 // <e> NRFX_SAADC_ENABLED - nrfx_saadc - SAADC peripheral driver
 //==========================================================
 #ifndef NRFX_SAADC_ENABLED
-#define NRFX_SAADC_ENABLED 0
+#define NRFX_SAADC_ENABLED 1
 #endif
 // <o> NRFX_SAADC_CONFIG_RESOLUTION  - Resolution
  
@@ -2807,7 +2807,7 @@
 // <3=> 14 bit 
 
 #ifndef NRFX_SAADC_CONFIG_RESOLUTION
-#define NRFX_SAADC_CONFIG_RESOLUTION 1
+#define NRFX_SAADC_CONFIG_RESOLUTION 2
 #endif
 
 // <o> NRFX_SAADC_CONFIG_OVERSAMPLE  - Sample period
@@ -2830,7 +2830,7 @@
  
 
 #ifndef NRFX_SAADC_CONFIG_LP_MODE
-#define NRFX_SAADC_CONFIG_LP_MODE 0
+#define NRFX_SAADC_CONFIG_LP_MODE 1
 #endif
 
 // <o> NRFX_SAADC_CONFIG_IRQ_PRIORITY  - Interrupt priority
@@ -2851,7 +2851,7 @@
 // <e> NRFX_SAADC_CONFIG_LOG_ENABLED - Enables logging in the module.
 //==========================================================
 #ifndef NRFX_SAADC_CONFIG_LOG_ENABLED
-#define NRFX_SAADC_CONFIG_LOG_ENABLED 0
+#define NRFX_SAADC_CONFIG_LOG_ENABLED 1
 #endif
 // <o> NRFX_SAADC_CONFIG_LOG_LEVEL  - Default Severity level
  
@@ -2862,7 +2862,7 @@
 // <4=> Debug 
 
 #ifndef NRFX_SAADC_CONFIG_LOG_LEVEL
-#define NRFX_SAADC_CONFIG_LOG_LEVEL 3
+#define NRFX_SAADC_CONFIG_LOG_LEVEL 4
 #endif
 
 // <o> NRFX_SAADC_CONFIG_INFO_COLOR  - ANSI escape code prefix.
@@ -4239,9 +4239,9 @@
 
 // <e> NRF_CLOCK_ENABLED - nrf_drv_clock - CLOCK peripheral driver - legacy layer
 //==========================================================
-#ifndef NRF_CLOCK_ENABLED
-#define NRF_CLOCK_ENABLED 1
-#endif
+//#ifndef NRF_CLOCK_ENABLED
+//#define NRF_CLOCK_ENABLED 0
+//#endif
 // <o> CLOCK_CONFIG_LF_SRC  - LF Clock Source
  
 // <0=> RC 
@@ -4251,7 +4251,7 @@
 // <196609=> External Full Swing 
 
 #ifndef CLOCK_CONFIG_LF_SRC
-#define CLOCK_CONFIG_LF_SRC 1
+#define CLOCK_CONFIG_LF_SRC 0
 #endif
 
 // <q> CLOCK_CONFIG_LF_CAL_ENABLED  - Calibration enable for LF Clock Source
@@ -4845,9 +4845,9 @@
 
 // <e> SAADC_ENABLED - nrf_drv_saadc - SAADC peripheral driver - legacy layer
 //==========================================================
-#ifndef SAADC_ENABLED
-#define SAADC_ENABLED 0
-#endif
+//#ifndef SAADC_ENABLED
+//#define SAADC_ENABLED 0
+//#endif
 // <o> SAADC_CONFIG_RESOLUTION  - Resolution
  
 // <0=> 8 bit 
@@ -5550,7 +5550,7 @@
  
 
 #ifndef APP_GPIOTE_ENABLED
-#define APP_GPIOTE_ENABLED 1
+#define APP_GPIOTE_ENABLED 0
 #endif
 
 // <q> APP_PWM_ENABLED  - app_pwm - PWM functionality
@@ -5629,7 +5629,7 @@
 // <e> APP_TIMER_ENABLED - app_timer - Application timer functionality
 //==========================================================
 #ifndef APP_TIMER_ENABLED
-#define APP_TIMER_ENABLED 1
+#define APP_TIMER_ENABLED 0
 #endif
 // <o> APP_TIMER_CONFIG_RTC_FREQUENCY  - Configure RTC prescaler.
  
@@ -6919,7 +6919,7 @@
  
 
 #ifndef BUTTON_ENABLED
-#define BUTTON_ENABLED 1
+#define BUTTON_ENABLED 0
 #endif
 
 // <q> BUTTON_HIGH_ACCURACY_ENABLED  - Enables GPIOTE high accuracy for buttons
@@ -8577,7 +8577,7 @@
 // <e> APP_BUTTON_CONFIG_LOG_ENABLED - Enables logging in the module.
 //==========================================================
 #ifndef APP_BUTTON_CONFIG_LOG_ENABLED
-#define APP_BUTTON_CONFIG_LOG_ENABLED 1
+#define APP_BUTTON_CONFIG_LOG_ENABLED 0
 #endif
 // <o> APP_BUTTON_CONFIG_LOG_LEVEL  - Default Severity level
  
@@ -8588,7 +8588,7 @@
 // <4=> Debug 
 
 #ifndef APP_BUTTON_CONFIG_LOG_LEVEL
-#define APP_BUTTON_CONFIG_LOG_LEVEL 4
+#define APP_BUTTON_CONFIG_LOG_LEVEL 3
 #endif
 
 // <o> APP_BUTTON_CONFIG_INITIAL_LOG_LEVEL  - Initial severity level if dynamic filtering is enabled.
@@ -8644,7 +8644,7 @@
 // <e> APP_TIMER_CONFIG_LOG_ENABLED - Enables logging in the module.
 //==========================================================
 #ifndef APP_TIMER_CONFIG_LOG_ENABLED
-#define APP_TIMER_CONFIG_LOG_ENABLED 1
+#define APP_TIMER_CONFIG_LOG_ENABLED 0
 #endif
 // <o> APP_TIMER_CONFIG_LOG_LEVEL  - Default Severity level
  
@@ -8655,7 +8655,7 @@
 // <4=> Debug 
 
 #ifndef APP_TIMER_CONFIG_LOG_LEVEL
-#define APP_TIMER_CONFIG_LOG_LEVEL 4
+#define APP_TIMER_CONFIG_LOG_LEVEL 3
 #endif
 
 // <o> APP_TIMER_CONFIG_INITIAL_LOG_LEVEL  - Initial severity level if dynamic filtering is enabled.
