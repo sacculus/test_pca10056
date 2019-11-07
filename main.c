@@ -43,14 +43,16 @@
 *
 */
 
-#ifdef BSP_SIMPLE
-#undef BSP_SIMPLE
-#endif
+//#ifdef BSP_SIMPLE
+//#undef BSP_SIMPLE
+//#endif
 
 #define SAADC_SAMPLES 1
+#define SAADC_SAMPLE_TIME_US 20
 
 #include <stdbool.h>
 #include <stdint.h>
+#include <math.h>
 
 #include "nrf.h"
 #include "nordic_common.h"
@@ -63,17 +65,11 @@
 #include "nrfx_gpiote.h"
 #include "nrfx_saadc.h"
 #include "nrf_pwr_mgmt.h"
-
-#include <math.h>
+#include "nrf_delay.h"
 
 #define TEST_BUTTON_0 NRF_GPIO_PIN_MAP(1,10)
 #define TEST_BUTTON_1 NRF_GPIO_PIN_MAP(0,7)
 #define TEST_BUTTON_2 NRF_GPIO_PIN_MAP(0,8)
-
-/**
- *  Delay from a GPIOTE event until a button is reported as pushed (in number of timer ticks).
- */
-#define BUTTON_DEBOUNCE_DELAY APP_TIMER_TICKS(50)
 
 static nrf_saadc_value_t saadc_buffer[SAADC_SAMPLES];
 
@@ -87,6 +83,12 @@ static void gpio_event_handler(nrfx_gpiote_pin_t pin,
 {
     NRF_LOG_INFO("GPIOTE event: pin %d, action %d, pin is %s", pin, action,
             (nrfx_gpiote_in_is_set(pin)? "set": "clear"));
+    if (!nrfx_gpiote_in_is_set(pin))
+    {
+        bsp_board_led_on(1);
+        nrf_delay_ms(500);
+        bsp_board_led_off(1);
+    }
 }
 
 static void saadc_event_handler(nrfx_saadc_evt_t const *p_event)
@@ -102,7 +104,7 @@ static void saadc_event_handler(nrfx_saadc_evt_t const *p_event)
                     p_event->data.done.p_buffer, SAADC_SAMPLES);
             NRF_LOG_INFO("SAADC value: " NRF_LOG_FLOAT_MARKER " V (%d raw)",
                     NRF_LOG_FLOAT((float)p_event->data.done.p_buffer[0] 
-                            * 6.0 * 0.6 / pow(2, 12)),
+                            * 6.0 * 0.6 / pow(2, 10)),
                     p_event->data.done.p_buffer[0]);
         APP_ERROR_CHECK(err_code);
             break;
@@ -130,6 +132,8 @@ static void gpio_init(void)
         APP_ERROR_CHECK(err_code);
     }
 
+    bsp_board_init(BSP_INIT_LEDS);
+
     nrfx_gpiote_in_config_t in_config =
             NRFX_GPIOTE_CONFIG_IN_SENSE_TOGGLE(false);
     in_config.pull = NRF_GPIO_PIN_PULLUP;
@@ -151,6 +155,15 @@ static void gpio_init(void)
     APP_ERROR_CHECK(err_code);
 
     nrfx_gpiote_in_event_enable(TEST_BUTTON_1, true);
+
+    /**
+     * Test button 2
+     */
+    err_code = nrfx_gpiote_in_init(TEST_BUTTON_2, &in_config,
+            gpio_event_handler);
+    APP_ERROR_CHECK(err_code);
+
+    nrfx_gpiote_in_event_enable(TEST_BUTTON_2, true);
 }
 
 void saadc_init()
@@ -205,6 +218,15 @@ int main(void)
     err_code = nrfx_saadc_buffer_convert(saadc_buffer, SAADC_SAMPLES);
     APP_ERROR_CHECK(err_code);
 
+    err_code = nrfx_saadc_sample();
+    APP_ERROR_CHECK(err_code);
+    nrf_delay_us(SAADC_SAMPLE_TIME_US);
+    err_code = nrfx_saadc_sample();
+    APP_ERROR_CHECK(err_code);
+    nrf_delay_us(SAADC_SAMPLE_TIME_US);
+    err_code = nrfx_saadc_sample();
+    APP_ERROR_CHECK(err_code);
+    nrf_delay_us(SAADC_SAMPLE_TIME_US);
     err_code = nrfx_saadc_sample();
     APP_ERROR_CHECK(err_code);
 
