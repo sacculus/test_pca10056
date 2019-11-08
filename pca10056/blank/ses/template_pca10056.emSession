@@ -64,8 +64,12 @@
   <Watches active="0" update="Never"/>
  </Watch4>
  <Files>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="54" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../main.c" selected="1" top="53" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="38" y="2825" useTextEdit="1" useBinaryEdit="0" left="0" path="../config/sdk_config.h" selected="0" top="2812" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="15" y="215" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../main.c" selected="1" top="201" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="4251" useTextEdit="1" useBinaryEdit="0" left="0" path="../config/sdk_config.h" selected="0" top="4255" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="15" y="81" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../../../../modules/nrfx/drivers/include/nrfx_rtc.h" selected="0" top="52" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="91" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../../../../modules/nrfx/drivers/nrfx_common.h" selected="0" top="71" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="0" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../../../../integration/nrfx/legacy/nrf_drv_clock.h" selected="0" top="90" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="43" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../../../../integration/nrfx/legacy/nrf_drv_clock.c" selected="0" top="27" codecName="Default"/>
  </Files>
  <ARMCrossStudioWindow activeProject="test_pca10056" fileDialogDefaultFilter="*.c" autoConnectTarget="J-Link" buildConfiguration="Debug" sessionSettings="" debugSearchFileMap="" fileDialogInitialDirectory="/home/mike/Projects/nRF/nRF5_SDK_16.0.0_98a08e2/external/segger_rtt" debugSearchPath="" autoConnectCapabilities="3711"/>
 </session>

@@ -2684,13 +2684,13 @@
 // <e> NRFX_RTC_ENABLED - nrfx_rtc - RTC peripheral driver
 //==========================================================
 #ifndef NRFX_RTC_ENABLED
-#define NRFX_RTC_ENABLED 0
+#define NRFX_RTC_ENABLED 1
 #endif
 // <q> NRFX_RTC0_ENABLED  - Enable RTC0 instance
  
 
 #ifndef NRFX_RTC0_ENABLED
-#define NRFX_RTC0_ENABLED 0
+#define NRFX_RTC0_ENABLED 1
 #endif
 
 // <q> NRFX_RTC1_ENABLED  - Enable RTC1 instance
@@ -2744,7 +2744,7 @@
 // <e> NRFX_RTC_CONFIG_LOG_ENABLED - Enables logging in the module.
 //==========================================================
 #ifndef NRFX_RTC_CONFIG_LOG_ENABLED
-#define NRFX_RTC_CONFIG_LOG_ENABLED 0
+#define NRFX_RTC_CONFIG_LOG_ENABLED 1
 #endif
 // <o> NRFX_RTC_CONFIG_LOG_LEVEL  - Default Severity level
  
@@ -2755,7 +2755,7 @@
 // <4=> Debug 
 
 #ifndef NRFX_RTC_CONFIG_LOG_LEVEL
-#define NRFX_RTC_CONFIG_LOG_LEVEL 3
+#define NRFX_RTC_CONFIG_LOG_LEVEL 4
 #endif
 
 // <o> NRFX_RTC_CONFIG_INFO_COLOR  - ANSI escape code prefix.
@@ -4239,9 +4239,9 @@
 
 // <e> NRF_CLOCK_ENABLED - nrf_drv_clock - CLOCK peripheral driver - legacy layer
 //==========================================================
-//#ifndef NRF_CLOCK_ENABLED
-//#define NRF_CLOCK_ENABLED 0
-//#endif
+#ifndef NRF_CLOCK_ENABLED
+#define NRF_CLOCK_ENABLED 1
+#endif
 // <o> CLOCK_CONFIG_LF_SRC  - LF Clock Source
  
 // <0=> RC 
@@ -4251,7 +4251,7 @@
 // <196609=> External Full Swing 
 
 #ifndef CLOCK_CONFIG_LF_SRC
-#define CLOCK_CONFIG_LF_SRC 0
+#define CLOCK_CONFIG_LF_SRC 1
 #endif
 
 // <q> CLOCK_CONFIG_LF_CAL_ENABLED  - Calibration enable for LF Clock Source
@@ -4781,9 +4781,9 @@
 
 // <e> RTC_ENABLED - nrf_drv_rtc - RTC peripheral driver - legacy layer
 //==========================================================
-#ifndef RTC_ENABLED
-#define RTC_ENABLED 0
-#endif
+//#ifndef RTC_ENABLED
+//#define RTC_ENABLED 0
+//#endif
 // <o> RTC_DEFAULT_CONFIG_FREQUENCY - Frequency  <16-32768> 
 
 

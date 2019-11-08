@@ -64,6 +64,8 @@
 
 #include "nrfx_gpiote.h"
 #include "nrfx_saadc.h"
+#include "nrf_drv_clock.h"
+#include "nrfx_rtc.h"
 #include "nrf_pwr_mgmt.h"
 #include "nrf_delay.h"
 
@@ -72,6 +74,8 @@
 #define TEST_BUTTON_2 NRF_GPIO_PIN_MAP(0,8)
 
 static nrf_saadc_value_t saadc_buffer[SAADC_SAMPLES];
+
+const nrfx_rtc_t p_rtc = NRFX_RTC_INSTANCE(0);
 
 /**@brief Function for handling events from the button handler module.
  *
@@ -83,11 +87,13 @@ static void gpio_event_handler(nrfx_gpiote_pin_t pin,
 {
     NRF_LOG_INFO("GPIOTE event: pin %d, action %d, pin is %s", pin, action,
             (nrfx_gpiote_in_is_set(pin)? "set": "clear"));
+    NRF_LOG_INFO("GPIO event: RTC0 ticks %d", nrfx_rtc_counter_get(&p_rtc));
     if (!nrfx_gpiote_in_is_set(pin))
     {
         bsp_board_led_on(1);
         nrf_delay_ms(500);
         bsp_board_led_off(1);
+        NRF_LOG_INFO("GPIO event: RTC0 ticks %d", nrfx_rtc_counter_get(&p_rtc));
     }
 }
 
@@ -118,6 +124,10 @@ static void saadc_event_handler(nrfx_saadc_evt_t const *p_event)
             buff = "unknown event";
     }
     NRF_LOG_INFO("SAADC event: %s", buff);
+}
+
+void rtc_event_handler(nrfx_rtc_int_type_t event)
+{
 }
 
 /**@brief Function for initializing the button handler module.
@@ -197,6 +207,18 @@ int main(void)
 
     saadc_init();
 
+    err_code = nrf_drv_clock_init();
+    APP_ERROR_CHECK(err_code);
+    
+    nrf_drv_clock_lfclk_request(NULL);
+
+    nrfx_rtc_config_t rtc_config = NRFX_RTC_DEFAULT_CONFIG;
+    rtc_config.
+    rtc_config.prescaler = 217;
+    err_code = nrfx_rtc_init(&p_rtc, &rtc_config, rtc_event_handler);
+    APP_ERROR_CHECK(err_code);
+    nrfx_rtc_enable(&p_rtc);
+
     /**
      * Initalization complete
      */
@@ -236,6 +258,9 @@ int main(void)
         { 
             NRF_LOG_FLUSH();
         }
+//        __SEV();
+//        __WFE();
+//        __WFE();
     }
 }
 /** @} */
