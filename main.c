@@ -69,9 +69,10 @@
 #include "nrf_pwr_mgmt.h"
 #include "nrf_delay.h"
 
-#define TEST_BUTTON_0 NRF_GPIO_PIN_MAP(1,10)
-#define TEST_BUTTON_1 NRF_GPIO_PIN_MAP(0,7)
-#define TEST_BUTTON_2 NRF_GPIO_PIN_MAP(0,8)
+#define IN_BUTTON_0 NRF_GPIO_PIN_MAP(0,10)
+#define IN_PROBE_1 NRF_GPIO_PIN_MAP(0,30)
+#define IN_PROBE_2 NRF_GPIO_PIN_MAP(0,31)
+#define OUT_LED_0 NRF_GPIO_PIN_MAP(0,9)
 
 static nrf_saadc_value_t saadc_buffer[SAADC_SAMPLES];
 
@@ -112,7 +113,7 @@ static void saadc_event_handler(nrfx_saadc_evt_t const *p_event)
                     NRF_LOG_FLOAT((float)p_event->data.done.p_buffer[0] 
                             * 6.0 * 0.6 / pow(2, 10)),
                     p_event->data.done.p_buffer[0]);
-        APP_ERROR_CHECK(err_code);
+            APP_ERROR_CHECK(err_code);
             break;
         case NRFX_SAADC_EVT_LIMIT:
             buff = "limit reached";
@@ -149,31 +150,31 @@ static void gpio_init(void)
     in_config.pull = NRF_GPIO_PIN_PULLUP;
 
     /**
-     * Test button 0
+     * Input button 0
      */
-    err_code = nrfx_gpiote_in_init(TEST_BUTTON_0, &in_config,
+    err_code = nrfx_gpiote_in_init(IN_BUTTON_0, &in_config,
             gpio_event_handler);
     APP_ERROR_CHECK(err_code);
 
-    nrfx_gpiote_in_event_enable(TEST_BUTTON_0, true);
+    nrfx_gpiote_in_event_enable(IN_BUTTON_0, true);
 
     /**
-     * Test button 1
+     * Input probe 1
      */
-    err_code = nrfx_gpiote_in_init(TEST_BUTTON_1, &in_config,
+    err_code = nrfx_gpiote_in_init(IN_PROBE_1, &in_config,
             gpio_event_handler);
     APP_ERROR_CHECK(err_code);
 
-    nrfx_gpiote_in_event_enable(TEST_BUTTON_1, true);
+    nrfx_gpiote_in_event_enable(IN_PROBE_1, true);
 
     /**
-     * Test button 2
+     * Input probe 2
      */
-    err_code = nrfx_gpiote_in_init(TEST_BUTTON_2, &in_config,
+    err_code = nrfx_gpiote_in_init(IN_PROBE_2, &in_config,
             gpio_event_handler);
     APP_ERROR_CHECK(err_code);
 
-    nrfx_gpiote_in_event_enable(TEST_BUTTON_2, true);
+    nrfx_gpiote_in_event_enable(IN_PROBE_2, true);
 }
 
 void saadc_init()
@@ -207,13 +208,12 @@ int main(void)
 
     saadc_init();
 
-    err_code = nrf_drv_clock_init();
+    //err_code = nrfx_clock_init();
     APP_ERROR_CHECK(err_code);
     
-    nrf_drv_clock_lfclk_request(NULL);
+    //nrf_drv_clock_lfclk_request(NULL);
 
     nrfx_rtc_config_t rtc_config = NRFX_RTC_DEFAULT_CONFIG;
-    rtc_config.
     rtc_config.prescaler = 217;
     err_code = nrfx_rtc_init(&p_rtc, &rtc_config, rtc_event_handler);
     APP_ERROR_CHECK(err_code);
