@@ -88,6 +88,7 @@
       <file file_name="../../../../../../modules/nrfx/drivers/src/nrfx_uarte.c" />
       <file file_name="../../../../../../modules/nrfx/drivers/src/nrfx_usbd.c" />
       <file file_name="../../../../../../modules/nrfx/drivers/src/nrfx_wdt.c" />
+      <file file_name="../../../../../../modules/nrfx/drivers/src/nrfx_temp.c" />
     </folder>
     <folder Name="nRF_Crypto backend cifra">
       <file file_name="../../../../../../components/libraries/crypto/backend/cifra/cifra_backend_aes_aead.c" />
@@ -241,7 +242,9 @@
       <file file_name="../../../../../../components/libraries/pwm/app_pwm.c" />
       <file file_name="../../../../../../components/libraries/scheduler/app_scheduler.c" />
       <file file_name="../../../../../../components/libraries/sdcard/app_sdcard.c" />
-      <file file_name="../../../../../../components/libraries/timer/app_timer2.c" />
+      <file file_name="../../../../../../components/libraries/timer/app_timer2.c">
+        <configuration Name="Debug" build_exclude_from_build="Yes" />
+      </file>
       <file file_name="../../../../../../components/libraries/uart/app_uart_fifo.c" />
       <file file_name="../../../../../../components/libraries/usbd/app_usbd.c" />
       <file file_name="../../../../../../components/libraries/usbd/class/audio/app_usbd_audio.c" />
@@ -259,7 +262,9 @@
       <file file_name="../../../../../../external/cifra_AES128-EAX/cifra_eax_aes.c" />
       <file file_name="../../../../../../components/libraries/crc16/crc16.c" />
       <file file_name="../../../../../../components/libraries/crc32/crc32.c" />
-      <file file_name="../../../../../../components/libraries/timer/drv_rtc.c" />
+      <file file_name="../../../../../../components/libraries/timer/drv_rtc.c">
+        <configuration Name="Debug" build_exclude_from_build="Yes" />
+      </file>
       <file file_name="../../../../../../external/cifra_AES128-EAX/eax.c" />
       <file file_name="../../../../../../components/libraries/fds/fds.c" />
       <file file_name="../../../../../../external/fnmatch/fnmatch.c" />
@@ -328,6 +333,9 @@
       <file file_name="../../../../../../external/segger_rtt/SEGGER_RTT_printf.c" />
       <file file_name="../../../../../../external/segger_rtt/SEGGER_RTT_Syscalls_SES.c" />
     </folder>
+    <configuration
+      Name="Debug"
+      c_preprocessor_definitions="CONFIG_NFCT_PINS_AS_GPIOS" />
   </project>
   <configuration
     Name="Release"
