@@ -77,6 +77,7 @@
 const nrfx_rtc_t rtc0 = NRFX_RTC_INSTANCE(0);
 const nrfx_rtc_t rtc1 = NRFX_RTC_INSTANCE(1);
 
+
 uint16_t saadc_sample()
 {
     nrfx_err_t err_code;
