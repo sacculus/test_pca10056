@@ -70,6 +70,9 @@
 #define CFG_BUTTON_LONG_PRESS_DELAY_MS 5000
 #define CFG_PROBE_DEBOUNCE_DELAY_MS 1000
 
+#define CFG_LED_FLASH_CYCLE_DELAY_MS 200
+#define CFG_LED_FLASH_DUTY_DELAY_MS 20
+
 #define RTC_COUNTER_FREQUENCY 100
 #define RTC_MS_TO_COUNTER(t) ((t * RTC_INPUT_FREQ / \
              (RTC_FREQ_TO_PRESCALER(RTC_COUNTER_FREQUENCY) + 1)) / 1000)
@@ -107,6 +110,44 @@ int32_t temp_measure()
     return result;
 }
 
+void led_blink(uint8_t count)
+{
+    uint32_t current_counter = nrfx_rtc_counter_get(&rtc1);
+    
+    /**
+     * RTC1 CC Channel 1: cycle phases (duty/pause) delay
+     * RTC1 CC Channel 2: cycles count limit
+     */
+
+    /**
+     * TODO: PROBLEM - need to understand is enabled RTC instance or not
+     */
+
+    /**
+     * LED cycle duty phase delay
+     */
+    nrfx_rtc_cc_set(&rtc1, 1,
+            current_counter +
+            RTC_MS_TO_COUNTER(CFG_LED_FLASH_DUTY_DELAY_MS), 
+            true);
+
+    /**
+     * Set cycle limit
+     * (cycle duration * cycle count - pause delay of last cycle)
+     */
+    nrfx_rtc_cc_set(&rtc1, 2,
+            current_counter +
+            RTC_MS_TO_COUNTER(CFG_LED_FLASH_CYCLE_DELAY_MS) * (count - 1) +
+                     RTC_MS_TO_COUNTER(CFG_LED_FLASH_DUTY_DELAY_MS),
+            true);
+
+    /**
+     * Switch LED to ON state
+     */
+    nrfx_gpiote_out_clear(OUT_LED_0);
+}
+
+
 static void gpio_event_handler(nrfx_gpiote_pin_t pin,
         nrf_gpiote_polarity_t action)
 {
@@ -125,8 +166,7 @@ static void gpio_event_handler(nrfx_gpiote_pin_t pin,
          */
         case IN_BUTTON_0:
             /*
-             * RTC1 CC Channel 0: debounce
-             * RTC1 CC Channel 1: long press delay
+             * RTC1 CC Channel 0: long press delay
              *
              * When button pressed first time all compare counters 
              * will started.
@@ -145,62 +185,55 @@ static void gpio_event_handler(nrfx_gpiote_pin_t pin,
              */
             current_counter = nrfx_rtc_counter_get(&rtc1);
 
-            if (current_counter == 0 && !pin_is_set)
+            if (current_counter == 0)
             {
+                if (!pin_is_set)
+                {
                 /*
                  * First press of button
-                 * Arm counters
+                 * Arm long press delay counter
                  */
                 nrfx_rtc_cc_set(&rtc1, 0,
-                        RTC_MS_TO_COUNTER(CFG_BUTTON_DEBOUNCE_DELAY_MS), true);
-                nrfx_rtc_cc_set(&rtc1, 1,
                         RTC_MS_TO_COUNTER(CFG_BUTTON_LONG_PRESS_DELAY_MS), 
                         true);
-                nrfx_rtc_enable(&rtc1);
+//                    nrfx_rtc_enable(&rtc1);
+                }
             }
             else if (pin_is_set)
             {
                 /*
                  * Button released
                  */
-                if (current_counter > 
-                        RTC_MS_TO_COUNTER(CFG_BUTTON_LONG_PRESS_DELAY_MS))
-                {
-                    /*
-                     * Long press
-                     */
-                    nrfx_gpiote_out_clear(OUT_LED_0);
-                    NRFX_DELAY_US(50000);
-                    nrfx_gpiote_out_set(OUT_LED_0);
-                    NRFX_DELAY_US(50000);
-                    nrfx_gpiote_out_clear(OUT_LED_0);
-                    NRFX_DELAY_US(50000);
-                    nrfx_gpiote_out_set(OUT_LED_0);
-                    NRFX_DELAY_US(50000);
-                    nrfx_gpiote_out_clear(OUT_LED_0);
-                    NRFX_DELAY_US(50000);
-                    nrfx_gpiote_out_set(OUT_LED_0);
-                }
-                else if (current_counter >
+                if (current_counter <
                         RTC_MS_TO_COUNTER(CFG_BUTTON_DEBOUNCE_DELAY_MS))
+                {
+                    /**
+                     * False event - under debounce time, ignore
+                     */
+                    nrfx_rtc_disable(&rtc1);
+                    nrfx_rtc_counter_clear(&rtc1);
+                }
+                else if (current_counter < 
+                        RTC_MS_TO_COUNTER(CFG_BUTTON_LONG_PRESS_DELAY_MS))
                 {
                     /*
                      * Short press
                      */
-                    nrfx_gpiote_out_clear(OUT_LED_0);
-                    NRFX_DELAY_US(50000);
-                    nrfx_gpiote_out_set(OUT_LED_0);
+                    nrfx_rtc_cc_disable(&rtc1, 0);
 
-                    saadc_sample();
-                    temp_measure();
+                    led_blink(2);
+
+                    /**
+                     * TODO: This place for some application job
+                     */
+//                    saadc_sample();
+//                    temp_measure();
                 }
-                nrfx_rtc_disable(&rtc1);
-                nrfx_rtc_counter_clear(&rtc1);
             }
             break;
         case IN_PROBE_1:
         case IN_PROBE_2:
-            nrfx_gpiote_out_toggle(OUT_LED_0);
+            led_blink(10);
             break;
         default:
             break;
@@ -230,9 +263,7 @@ void rtc0_event_handler(nrfx_rtc_int_type_t event)
                     RTC_MS_TO_COUNTER(CFG_MAIN_LOOP_DELAY_MS), true);
             APP_ERROR_CHECK(err_code);
 
-            nrfx_gpiote_out_clear(OUT_LED_0);
-            NRFX_DELAY_US(50000);
-            nrfx_gpiote_out_set(OUT_LED_0);
+//            led_blink(3);
 
             saadc_sample();
             temp_measure();
@@ -252,7 +283,8 @@ void rtc1_event_handler(nrfx_rtc_int_type_t event)
     /*
      * Current button state
      */
-    bool pin_is_set = nrfx_gpiote_in_is_set(IN_BUTTON_0);
+    bool btn_is_set = nrfx_gpiote_in_is_set(IN_BUTTON_0);
+    uint32_t current_counter = nrfx_rtc_counter_get(&rtc1);
 
     switch (event)
     {
@@ -261,37 +293,63 @@ void rtc1_event_handler(nrfx_rtc_int_type_t event)
          */
         case NRFX_RTC_INT_COMPARE0:
             /*
-             * Button was released within debounce period
+             * Long press delay reached
              */
-            if(pin_is_set)
+            if(!btn_is_set)
             {
-                nrfx_rtc_counter_clear(&rtc1);
-                nrfx_rtc_disable(&rtc1);
+                /**
+                 * Stop button long press counter
+                 */
+                nrfx_rtc_cc_disable(&rtc1, 0);
+
+                led_blink(5);
+
+                /**
+                 * TODO: This place for some application job
+                 */
             }
             break;
         case NRFX_RTC_INT_COMPARE1:
             /*
-             * Button was not released within long press period
+             * Toggle LED state and set counter of next phase
              */
-            if(!pin_is_set)
+
+            if(nrf_gpio_pin_out_read(OUT_LED_0))
             {
-                /*
-                 * Long press
+                /**
+                 * LED is off - going to duty phase
                  */
+                nrfx_rtc_cc_set(&rtc1, 1,
+                        current_counter +
+                                RTC_MS_TO_COUNTER(CFG_LED_FLASH_DUTY_DELAY_MS), 
+                        true);
+
                 nrfx_gpiote_out_clear(OUT_LED_0);
-                NRFX_DELAY_US(50000);
-                nrfx_gpiote_out_set(OUT_LED_0);
-                NRFX_DELAY_US(50000);
-                nrfx_gpiote_out_clear(OUT_LED_0);
-                NRFX_DELAY_US(50000);
-                nrfx_gpiote_out_set(OUT_LED_0);
-                NRFX_DELAY_US(50000);
-                nrfx_gpiote_out_clear(OUT_LED_0);
-                NRFX_DELAY_US(50000);
+            }
+            else
+            {
+                /**
+                 * LED is on - going to passive phase
+                 */
+                nrfx_rtc_cc_set(&rtc1, 1,
+                        current_counter +
+                                (RTC_MS_TO_COUNTER(CFG_LED_FLASH_CYCLE_DELAY_MS) -
+                                RTC_MS_TO_COUNTER(CFG_LED_FLASH_DUTY_DELAY_MS)),
+                        true);
+
                 nrfx_gpiote_out_set(OUT_LED_0);
             }
-            nrfx_rtc_counter_clear(&rtc1);
+            break;
+        case NRFX_RTC_INT_COMPARE2:
+            /*
+             * LED blink finished - disable counter and switch led off
+             */
             nrfx_rtc_disable(&rtc1);
+            nrfx_rtc_cc_disable(&rtc1, 1);
+            nrfx_rtc_cc_disable(&rtc1, 2);
+            nrfx_rtc_counter_clear(&rtc1);
+
+            nrfx_gpiote_out_set(OUT_LED_0);
             break;
         default:
             break;
@@ -462,7 +520,7 @@ int main(void)
     /*
      * RTC instance #0 - used for main loop cicle
      */
-    rtc0_init();
+//    rtc0_init();
 
     /*
      * RTC instance #1 - used for button 0 input
@@ -490,12 +548,12 @@ int main(void)
     /*
      * Start RTC0 for main loop
      */
-    nrfx_rtc_counter_clear(&rtc0);
-    err_code = nrfx_rtc_cc_set(&rtc0, 0, 
-            RTC_MS_TO_COUNTER(CFG_MAIN_LOOP_DELAY_MS), true);
-    APP_ERROR_CHECK(err_code);
-
-    nrfx_rtc_enable(&rtc0);
+//    nrfx_rtc_counter_clear(&rtc0);
+//    err_code = nrfx_rtc_cc_set(&rtc0, 0, 
+//            RTC_MS_TO_COUNTER(CFG_MAIN_LOOP_DELAY_MS), true);
+//    APP_ERROR_CHECK(err_code);
+//
+//    nrfx_rtc_enable(&rtc0);
 
     /*
      * Main loop
