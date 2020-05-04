@@ -189,14 +189,15 @@ static void gpio_event_handler(nrfx_gpiote_pin_t pin,
             {
                 if (!pin_is_set)
                 {
-                /*
-                 * First press of button
-                 * Arm long press delay counter
-                 */
-                nrfx_rtc_cc_set(&rtc1, 0,
-                        RTC_MS_TO_COUNTER(CFG_BUTTON_LONG_PRESS_DELAY_MS), 
-                        true);
-//                    nrfx_rtc_enable(&rtc1);
+                    /*
+                     * First press of button
+                     * Arm long press delay counter
+                     */
+                    nrfx_rtc_cc_set(&rtc1, 0,
+                            RTC_MS_TO_COUNTER(CFG_BUTTON_LONG_PRESS_DELAY_MS), 
+                            true);
+                    nrfx_rtc_counter_clear(&rtc1);
+                    nrfx_rtc_enable(&rtc1);
                 }
             }
             else if (pin_is_set)
@@ -300,7 +301,7 @@ void rtc1_event_handler(nrfx_rtc_int_type_t event)
                 /**
                  * Stop button long press counter
                  */
-                nrfx_rtc_cc_disable(&rtc1, 0);
+//                nrfx_rtc_cc_disable(&rtc1, 0);
 
                 led_blink(5);
 
